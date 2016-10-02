@@ -1,0 +1,22 @@
+{
+  "name": "light-request",
+  "version": "0.0.0",
+  "description": "light request for browsers and node.js",
+  "main": "light-request.js",
+  "dependencies": {},
+  "devDependencies": {},
+  "keywords": [],
+  "author": "LightSpeedC",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "LightSpeedWorks/light-request"
+  },
+  "bugs": {
+    "url": "https://github.com/LightSpeedWorks/light-request/issues"
+  },
+  "homepage": "https://github.com/LightSpeedWorks/light-request#readme",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
