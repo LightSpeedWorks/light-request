@@ -3,6 +3,18 @@
 // support ES5
 // do not use ES6 (ES2015) or later
 
+//  var request = require('light-request');
+//  p = request(method, [options], uri, [data]);
+//     method: GET, POST, PUT, DELETE
+
+//  p = request.get([options], uri);
+//  p = request.post([options], uri, [data]);
+//  p = request.put([options], uri, [data]);
+//  p = request.del([options], uri, [data]);
+//  p = request.delete([options], uri, [data]);
+
+//  options: {headers: {'x-get-data': true}}
+
 (this || {}).request = function () {
 	'use strict';
 
@@ -28,15 +40,17 @@
 		module.exports = request;
 
 	//request.setDefaultHeaders(headers)
-	request.get  = function (uri, data, opts) { return request('GET',    uri, data, opts); };
-	request.post = function (uri, data, opts) { return request('POST',   uri, data, opts); };
-	request.put  = function (uri, data, opts) { return request('PUT',    uri, data, opts); };
-	request.del  = function (uri, data, opts) { return request('DELETE', uri, data, opts); };
+	request.get  = function (opts, uri, data) { return request('GET',    opts, uri, data); };
+	request.post = function (opts, uri, data) { return request('POST',   opts, uri, data); };
+	request.put  = function (opts, uri, data) { return request('PUT',    opts, uri, data); };
+	request.del  = function (opts, uri, data) { return request('DELETE', opts, uri, data); };
 	request['delete'] = request.del;
 
 	return request;
 
-	function requestXHR(method, uri, data, options) {
+	function requestXHR(method, options, uri, data) {
+		if (typeof options === 'string')
+			data = uri, uri = options, options = {};
 		var start = new Date;
 		return new Promise(function (resolve, reject) {
 			var xhr = new XMLHttpRequest;
@@ -66,7 +80,7 @@
 			if (options && options.headers)
 				for (var i in options.headers)
 					try { xhr.setRequestHeader(i, options.headers[i]); }
-					catch (e) { console.log(e); }
+					catch (e) { console.error(e); }
 			if (typeof data !== 'undefined') {
 				xhr.setRequestHeader('Content-Type', 'application/json');
 				xhr.send(JSON.stringify(data));
@@ -75,7 +89,9 @@
 		}); // new Promise
 	} // requestXHR
 
-	function requestHTTP(method, uri, data, options) {
+	function requestHTTP(method, options, uri, data) {
+		if (typeof options === 'string')
+			data = uri, uri = options, options = {};
 		return new Promise(function (resolve, reject) {
 			var opts = deps.parseURL(uri);
 			opts.method = method;
