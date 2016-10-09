@@ -1,0 +1,57 @@
+index.html
+<script>
+if (navigator.userAgent.indexOf('Trident') >= 0 || navigator.userAgent.indexOf('MSIE') >= 0) {
+	var scr = 'script';
+	document.writeln('<p>Trident</p>');
+	document.writeln('<' + scr + ' src="http://lightspeedworks.github.io/promise-light/promise-light.js"></' + scr + '>');
+}
+</script>
+<hr/>
+<div id="nav"></div>
+<hr/>
+<div id="res-json"></div>
+<hr/>
+<div id="res-html"></div>
+<hr/>
+<script>
+console.log(navigator);
+document.getElementById('nav').innerHTML = navigator.userAgent;
+</script>
+<script src="http://lightspeedworks.github.io/light-request/light-request.js"></script>
+<script>
+
+request.get('/').then(
+	makeOnResponse('res-html'), makeOnError('res-html'));
+request.get('/data.json').then(
+	makeOnResponse('res-json'), makeOnError('res-json'));
+
+function makeOnResponse(id) {
+	return function onResponse(res) {
+		console.log('res.statusCode:', res.statusCode);
+		console.log('res.statusMessage:', res.statusMessage);
+		console.log('res.body:', res.body);
+		console.log('res.headers:', res.headers);
+		var body = res.body;
+		try { if (typeof body === 'object') body = 'json: ' + JSON.stringify(body); } catch (e) {}
+		try { if (typeof body !== 'string' && body.toString) body = typeof body + ': ' + body.toString(); } catch (e) {}
+		try { if (typeof body !== 'string') body = typeof body + ': ' + body; } catch (e) {}
+		document.getElementById(id).innerHTML =
+			'<pre><b>res.statusCode: ' + res.statusCode +
+			'\nres.statusMesssage: ' + res.statusMessage +
+			'\nres.body: </b><font color="green" style="background-color: #f8f8f8">' + body
+				.replace(/&/g, '&amp;')
+				.replace(/>/g, '&gt;')
+				.replace(/</g, '&lt;') +
+			'</font>\n====</pre>';
+	};
+}
+
+function makeOnError(id) {
+	return function onError(err) {
+		console.error(err);
+		document.getElementById(id).innerHTML =
+			'<font color="red">' + err + '</font>';
+	};
+}
+
+</script>
