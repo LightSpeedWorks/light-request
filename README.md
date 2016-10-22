@@ -63,7 +63,7 @@ p = request(method, [options], uri, data);
 #### uri: String
 
 ```js
-uri = 'http://ww.google.com';
+uri = 'http://www.google.com';
 ```
 
 #### data: String or JSON
