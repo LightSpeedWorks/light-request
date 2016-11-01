@@ -4,19 +4,21 @@
 // do not use ES6 (ES2015) or later
 
 //  var request = require('light-request');
-//  p = request(method, [options], uri, [data]);
+//  p = request(method, [options], url, [data]);
 //     method: GET, POST, PUT, DELETE
 
-//  p = request.get([options], uri);
-//  p = request.post([options], uri, [data]);
-//  p = request.put([options], uri, [data]);
-//  p = request.del([options], uri, [data]);
-//  p = request.delete([options], uri, [data]);
+//  p = request.get([options], url);
+//  p = request.post([options], url, [data]);
+//  p = request.put([options], url, [data]);
+//  p = request.del([options], url, [data]);
+//  p = request.delete([options], url, [data]);
 
 //  options: {headers: {'x-get-data': true}}
 
 (this || {}).request = function () {
 	'use strict';
+
+	var slice = [].slice;
 
 	var request, deps;
 	try {
@@ -40,17 +42,17 @@
 		module.exports = request;
 
 	//request.setDefaultHeaders(headers)
-	request.get  = function (opts, uri, data) { return request('GET',    opts, uri, data); };
-	request.post = function (opts, uri, data) { return request('POST',   opts, uri, data); };
-	request.put  = function (opts, uri, data) { return request('PUT',    opts, uri, data); };
-	request.del  = function (opts, uri, data) { return request('DELETE', opts, uri, data); };
+	request.get  = function (opts, url, data) { return request('GET',    opts, url, data); };
+	request.post = function (opts, url, data) { return request('POST',   opts, url, data); };
+	request.put  = function (opts, url, data) { return request('PUT',    opts, url, data); };
+	request.del  = function (opts, url, data) { return request('DELETE', opts, url, data); };
 	request['delete'] = request.del;
 
 	return request;
 
-	function requestXHR(method, options, uri, data) {
+	function requestXHR(method, options, url, data) {
 		if (typeof options === 'string')
-			data = uri, uri = options, options = {};
+			data = url, url = options, options = {};
 		var start = new Date;
 		return new Promise(function (resolve, reject) {
 			var xhr = new XMLHttpRequest;
@@ -76,7 +78,7 @@
 				}
 			}
 			xhr.onerror = reject;
-			xhr.open(method, uri, true);
+			xhr.open(method, url, true);
 			if (options && options.headers)
 				for (var i in options.headers)
 					try { xhr.setRequestHeader(i, options.headers[i]); }
@@ -89,11 +91,11 @@
 		}); // new Promise
 	} // requestXHR
 
-	function requestHTTP(method, options, uri, data) {
+	function requestHTTP(method, options, url, data) {
 		if (typeof options === 'string')
-			data = uri, uri = options, options = {};
+			data = url, url = options, options = {};
 		return new Promise(function (resolve, reject) {
-			var opts = deps.parseURL(uri);
+			var opts = deps.parseURL(url);
 			opts.method = method;
 			opts.headers = {};
 			if (options && options.headers)
