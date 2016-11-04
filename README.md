@@ -2,6 +2,7 @@ light-request
 ====
 
 `light-request` is simple ajax module.
+
 support following feature:
 + ES6 Promise
 + Thunk
