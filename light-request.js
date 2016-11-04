@@ -42,10 +42,10 @@
 		module.exports = request;
 
 	//request.setDefaultHeaders(headers)
-	request.get  = function (opts, url, data) { return request('GET',    opts, url, data); };
-	request.post = function (opts, url, data) { return request('POST',   opts, url, data); };
-	request.put  = function (opts, url, data) { return request('PUT',    opts, url, data); };
-	request.del  = function (opts, url, data) { return request('DELETE', opts, url, data); };
+	request.get  = function (opts, url, data, cb) { return request('GET',    opts, url, data, cb); };
+	request.post = function (opts, url, data, cb) { return request('POST',   opts, url, data, cb); };
+	request.put  = function (opts, url, data, cb) { return request('PUT',    opts, url, data, cb); };
+	request.del  = function (opts, url, data, cb) { return request('DELETE', opts, url, data, cb); };
 	request['delete'] = request.del;
 
 	return request;
@@ -58,7 +58,7 @@
 		url = i < n ? a[i++] : undefined;
 		data = i < n ? a[i++] : undefined;
 
-		var start = new Date;
+		//var start = new Date;
 		var xhr = new XMLHttpRequest;
 		xhr.onreadystatechange = function () {
 			//console.log('time:', (new Date - start) / 1000, 'sec, State:',
@@ -126,9 +126,10 @@
 					cb(null, res);
 				else cb(new Error('Status ' + res.statusCode + ': ' + res.statusMessage), res);
 			});
+			res.on('error', cb);
 		});
 		if (typeof data !== 'undefined') req.write(data);
-		req.end();
+		req.on('error', cb).end();
 		return cb.promiseThunk;
 	} // requestHTTP
 
