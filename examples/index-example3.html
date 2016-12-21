@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>index</title>
+</head>
+<body>
+index.html
+<hr/>
+<div id="nav"></div>
+<hr/>
+<div id="res-json"></div>
+<hr/>
+<div id="res-text"></div>
+<hr/>
+<div id="res-err"></div>
+<hr/>
+
+<script>
+(function (global) {
+	var script = document.createElement('script');
+	global.loadScriptFile = function (scriptFile) {
+		script.src = scriptFile;
+		document.writeln(script.outerHTML);
+		console.info('loading ' + scriptFile);
+	};
+})(this);
+
+if (navigator.userAgent.indexOf('Trident') >= 0 || navigator.userAgent.indexOf('MSIE') >= 0) {
+	console.log('this browser = Trident');
+	loadScriptFile('promise-light.js');
+	//var scr = 'script';
+	//document.writeln('<' + 'p>this browser = Trident<' + '/p>');
+	//document.writeln('<' + scr + ' src="promise-light.js"></' + scr + '>');
+}
+</script>
+<script>
+console.log(navigator);
+document.getElementById('nav').innerHTML = navigator.userAgent;
+</script>
+<script src="light-request3.js"></script>
+<script>
+setTimeout(function () {
+	console.log('window.onload');
+
+	request.get('data.txt').then(
+		makeOnResponse('res-text'), makeOnError('res-text'));
+	request.get('data.json').then(
+		makeOnResponse('res-json'), makeOnError('res-json'));
+	request.get('data.err').then(
+		makeOnResponse('res-err'), makeOnError('res-err'));
+
+	function makeOnResponse(id) {
+		return function onResponse(res) {
+			console.log('res.statusCode:', res.statusCode);
+			console.log('res.statusMessage:', res.statusMessage);
+			console.log('res.body:', res.body);
+			console.log('res.headers:', res.headers);
+			var body = res.body;
+			try { if (typeof body === 'object') body = 'json: ' + JSON.stringify(body); } catch (e) {}
+			try { if (typeof body !== 'string' && body.toString) body = typeof body + ': ' + body.toString(); } catch (e) {}
+			try { if (typeof body !== 'string') body = typeof body + ': ' + body; } catch (e) {}
+			document.getElementById(id).innerHTML =
+				'<pre><b>res.statusCode: ' + res.statusCode +
+				'\nres.statusMesssage: ' + res.statusMessage +
+				'\nres.body: </b><font color="green" style="background-color: #f8f8f8">' + body
+					.replace(/&/g, '&amp;')
+					.replace(/>/g, '&gt;')
+					.replace(/</g, '&lt;') +
+				'</font>\n====</pre>';
+		};
+	} // makeOnResponse
+
+	function makeOnError(id) {
+		return function onError(err) {
+			console.error(err);
+			document.getElementById(id).innerHTML =
+				'<font color="red">' + err + '</font>';
+		};
+	} // makeOnError
+
+}, 1000) // setTimeot
+</script>
+</body>
+</html>
