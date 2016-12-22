@@ -112,7 +112,8 @@
 				try { xhr.setRequestHeader(i, options.headers[i]); }
 				catch (e) { console.error(e); }
 		if (typeof data === 'string') {
-			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+			// xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+			xhr.setRequestHeader('Content-Type', 'text/plain; charset=UTF-8');
 			xhr.send(data); // TODO URL Encode!?
 		}
 		else if (typeof data !== 'undefined') {
