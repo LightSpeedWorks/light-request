@@ -7,7 +7,7 @@
 //  p = request(method, [options], url, [data]);
 //     method: GET, POST, PUT, DELETE
 
-//  p = request.get([options], url);
+//  p = request.get([options], url, [data]);
 //  p = request.post([options], url, [data]);
 //  p = request.put([options], url, [data]);
 //  p = request.del([options], url, [data]);
@@ -51,12 +51,12 @@
 	return request;
 
 	function requestXHR(method, options, url, data, cb) {
-		var i = 0, a = arguments, n = arguments.length;
-		cb = typeof a[n - 1] === 'function' ? a[--n] : promiseThunkCallback();
-		method = i < n ? a[i++] : undefined;
-		options = i < n && typeof a[i] === 'object' && a[i++] || {};
-		url = i < n ? a[i++] : undefined;
-		data = i < n ? a[i++] : undefined;
+		var i = 0, args = arguments, n = arguments.length;
+		cb = typeof args[n - 1] === 'function' ? args[--n] : promiseThunkCallback();
+		method = i < n ? args[i++] : undefined;
+		options = i < n && typeof args[i] === 'object' && args[i++] || {};
+		url = i < n ? args[i++] : undefined;
+		data = i < n ? args[i++] : undefined;
 
 		//var start = new Date;
 		var xhr = new XMLHttpRequest;
@@ -90,12 +90,16 @@
 			cb(err, res);
 		}
 		xhr.open(method, url, true);
-		if (options && options.headers)
+
+		// options.headers
+		if (/* options && */ options.headers)
 			for (var i in options.headers)
 				try { xhr.setRequestHeader(i, options.headers[i]); }
 				catch (e) { console.error(e); }
+		var headers = options.headers || {};
+		//Object.keys(headers).map(p => {key: p.toLowerCase(), headers[])
+
 		if (typeof data === 'string') {
-			// xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 			xhr.setRequestHeader('Content-Type', 'text/plain; charset=UTF-8');
 			xhr.send(data); // TODO URL Encode!?
 		}
