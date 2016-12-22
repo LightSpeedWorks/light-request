@@ -19,7 +19,8 @@
 (this || {}).request = function () {
 	'use strict';
 
-	var slice = [].slice;
+	//var slice = [].slice;
+	var unshift = [].unshift;
 
 	var request = requestXHR;
 	//var deps = {readyState: [
@@ -33,9 +34,11 @@
 
 	function makeRequest(method) {
 		return function (opts, url, data, cb) {
-			var args = slice.call(arguments);
-			args.unshift(method);
-			return request.apply(null, args);
+			// var args = slice.call(arguments);
+			// args.unshift(method);
+			// return request.apply(null, args);
+			unshift.call(arguments, method);
+			return request.apply(null, arguments);
 		};
 	}
 
