@@ -89,8 +89,12 @@
 				try { xhr.setRequestHeader(i, options.headers[i]); }
 				catch (e) { console.error(e); }
 		if (typeof data !== 'undefined') {
-			xhr.setRequestHeader('Content-Type', 'application/json');
-			xhr.send(JSON.stringify(data));
+			if (data.formData) {
+				xhr.send(data.formData);
+			} else {
+				xhr.setRequestHeader('Content-Type', 'application/json');
+				xhr.send(JSON.stringify(data));
+			}
 		}
 		else xhr.send();
 		return cb.promiseThunk;

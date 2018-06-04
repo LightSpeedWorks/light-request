@@ -1,6 +1,6 @@
 {
   "name": "light-request",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "light request for browsers and node.js",
   "main": "light-request.js",
   "dependencies": {},
