@@ -89,7 +89,7 @@
 				try { xhr.setRequestHeader(i, options.headers[i]); }
 				catch (e) { console.error(e); }
 		if (typeof data !== 'undefined') {
-			if (data.formData) {
+			if (data && data.formData) {
 				xhr.send(data.formData);
 			} else {
 				xhr.setRequestHeader('Content-Type', 'application/json');
